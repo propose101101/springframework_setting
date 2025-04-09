@@ -8,7 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/member")
@@ -94,10 +96,31 @@ public class MemberController {
     }
 
     @PostMapping("/email-check")
-    public @ResponseBody String emailCheck(@RequestParam("memberEmail") String memberEmail) {
-        System.out.println("memberEmail = " + memberEmail);
-        String checkResult = memberService.emailCheck(memberEmail);
-        return checkResult;
+    @ResponseBody
+    public Map<String, Boolean> emailCheck(@RequestParam("memberEmail") String memberEmail) {
+        boolean isAvailable = memberService.emailCheck(memberEmail);
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("isAvailable", isAvailable);
+        return map;
     }
+
+    @GetMapping("/info")
+    @ResponseBody
+    public Map<String, Object> getMemberInfo() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("userId", "banana123");
+        result.put("userName", "홍길동");
+        result.put("age", 28);
+        result.put("isActive", true);
+        return result;
+    }
+
+
+    @GetMapping("/members")
+    @ResponseBody
+    public List<MemberDTO> getAllMembers() {
+        return memberService.findAll();
+    }
+
 
 }
